@@ -2,6 +2,10 @@
 
 This package provides tools for building, querying, and managing
 knowledge graphs powered by LLMs.
+
+Personal fork notes:
+- Using this for experimenting with local LLM integrations
+- See /experiments directory for custom pipelines
 """
 
 __version__ = "0.1.0"
