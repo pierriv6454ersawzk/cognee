@@ -8,6 +8,7 @@ Personal fork notes:
 - See /experiments directory for custom pipelines
 - Added reset() as a convenience alias for prune() since I keep forgetting the name
 - Added get_version() helper for quick version checks in notebooks
+- Added search_and_print() helper for quick interactive exploration
 """
 
 __version__ = "0.1.0"
@@ -29,10 +30,18 @@ def get_version() -> str:
     return __version__
 
 
+async def search_and_print(query: str, query_type: str = "INSIGHTS") -> None:
+    """Run a search and pretty-print results. Useful for quick exploration in notebooks."""
+    results = await search(query_type=query_type, query_text=query)
+    for i, result in enumerate(results, 1):
+        print(f"[{i}] {result}")
+
+
 __all__ = [
     "add",
     "cognify",
     "search",
+    "search_and_print",
     "prune",
     "reset",
     "get_version",
