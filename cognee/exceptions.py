@@ -81,13 +81,6 @@ class NodeNotFoundError(GraphDBError):
 
     def __init__(self, node_id: str):
         self.node_id = node_id
-        super().__init__(message=f"Node '{node_id}' not found", operation="lookup")
-
-
-class AuthenticationError(CogneeError):
-    """Raised when authentication with an external service fails."""
-
-    def __init__(self, message: str = "Authentication failed", service: str = None):
-        self.service = service
-        full_message = f"Authentication failed for service '{service}': {message}" if service else message
-        super().__init__(full_message)
+        # Include the node_id in the operation field so it shows up in the
+        # formatted message from GraphDBError, making logs easier to grep.
+        super().__init__(message=f"Node '{node_id}' does not exist", operation="node_lookup")
