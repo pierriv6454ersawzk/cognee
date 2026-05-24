@@ -25,7 +25,8 @@ except ImportError:
 class LLMConfig:
     """Configuration for the language model provider."""
     provider: str = field(default_factory=lambda: os.getenv("LLM_PROVIDER", "openai"))
-    model: str = field(default_factory=lambda: os.getenv("LLM_MODEL", "gpt-4o-mini"))
+    # Bumped default model from gpt-4o-mini to gpt-4o for better reasoning quality
+    model: str = field(default_factory=lambda: os.getenv("LLM_MODEL", "gpt-4o"))
     api_key: Optional[str] = field(default_factory=lambda: os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY"))
     api_base: Optional[str] = field(default_factory=lambda: os.getenv("LLM_API_BASE"))
     temperature: float = field(default_factory=lambda: float(os.getenv("LLM_TEMPERATURE", "0.0")))
@@ -72,43 +73,3 @@ class StorageConfig:
         """Create storage directories if they do not exist."""
         Path(self.data_root_dir).mkdir(parents=True, exist_ok=True)
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
-
-
-@dataclass
-class Config:
-    """Top-level cognee configuration aggregating all sub-configs."""
-    llm: LLMConfig = field(default_factory=LLMConfig)
-    vector_db: VectorDBConfig = field(default_factory=VectorDBConfig)
-    graph_db: GraphDBConfig = field(default_factory=GraphDBConfig)
-    storage: StorageConfig = field(default_factory=StorageConfig)
-
-    # General settings
-    log_level: str = field(default_factory=lambda: os.getenv("LOG_LEVEL", "INFO"))
-    environment: str = field(default_factory=lambda: os.getenv("ENVIRONMENT", "development"))
-
-    def validate(self) -> None:
-        """Validate critical configuration values and raise errors for missing required fields."""
-        if not self.llm.api_key:
-            raise ValueError(
-                "LLM API key is not set. "
-                "Please set LLM_API_KEY or OPENAI_API_KEY in your environment or .env file."
-            )
-
-
-# Module-level singleton instance
-_config: Optional[Config] = None
-
-
-def get_config() -> Config:
-    """Return the global Config singleton, creating it on first call."""
-    global _config
-    if _config is None:
-        _config = Config()
-        _config.storage.ensure_dirs()
-    return _config
-
-
-def reset_config() -> None:
-    """Reset the global Config singleton (useful for testing)."""
-    global _config
-    _config = None
