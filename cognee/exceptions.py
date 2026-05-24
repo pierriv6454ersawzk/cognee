@@ -81,6 +81,6 @@ class NodeNotFoundError(GraphDBError):
 
     def __init__(self, node_id: str):
         self.node_id = node_id
-        # Include the node_id in the message and pass it as the operation for
-        # consistent formatting with other GraphDBError messages.
-        super().__init__(message=f"Node '{node_id}' does not exist", operation="node_lookup")
+        # Include the node_id in the message so it shows up clearly in tracebacks
+        # without having to inspect the exception attributes separately.
+        super().__init__(message=f"Node '{node_id}' not found", operation="lookup")
