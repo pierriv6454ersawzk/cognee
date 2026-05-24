@@ -7,6 +7,7 @@ Personal fork notes:
 - Using this for experimenting with local LLM integrations
 - See /experiments directory for custom pipelines
 - Added reset() as a convenience alias for prune() since I keep forgetting the name
+- Added get_version() helper for quick version checks in notebooks
 """
 
 __version__ = "0.1.0"
@@ -22,12 +23,19 @@ from cognee.config import Config
 # Personal convenience alias - I always forget the function is called 'prune'
 reset = prune
 
+
+def get_version() -> str:
+    """Return the current version string. Handy for quick checks in notebooks."""
+    return __version__
+
+
 __all__ = [
     "add",
     "cognify",
     "search",
     "prune",
     "reset",
+    "get_version",
     "Config",
     "__version__",
 ]
