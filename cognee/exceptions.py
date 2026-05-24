@@ -60,7 +60,9 @@ class SearchError(CogneeError):
 
     def __init__(self, message: str = "Search operation failed", query: str = None):
         self.query = query
-        full_message = f"Search failed for query '{query}': {message}" if query else message
+        # Truncate long queries in the error message to keep logs readable
+        display_query = (query[:80] + "...") if query and len(query) > 80 else query
+        full_message = f"Search failed for query '{display_query}': {message}" if display_query else message
         super().__init__(full_message)
 
 
