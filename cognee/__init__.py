@@ -10,6 +10,7 @@ Personal fork notes:
 - Added get_version() helper for quick version checks in notebooks
 - Added search_and_print() helper for quick interactive exploration
 - search_and_print() now defaults to GRAPH_COMPLETION for richer answers
+- search_and_print() now prints a header line showing the query, easier to read in long notebook sessions
 """
 
 __version__ = "0.1.0"
@@ -38,6 +39,9 @@ async def search_and_print(query: str, query_type: str = "GRAPH_COMPLETION") -> 
     to give more complete, readable answers when exploring a knowledge graph interactively.
     """
     results = await search(query_type=query_type, query_text=query)
+    # Print a header so it's easy to see which query produced which results
+    # when running multiple searches back-to-back in a notebook cell
+    print(f"\n=== Results for: {query!r} ({query_type}) ===")
     for i, result in enumerate(results, 1):
         print(f"[{i}] {result}")
 
