@@ -7,7 +7,7 @@ from environment variables and .env files.
 import os
 from dataclasses import dataclass, field
 from typing import Optional
-from pathlib import Path
+from Path import Path
 
 # Try to load .env file if python-dotenv is available
 try:
@@ -30,7 +30,8 @@ class LLMConfig:
     api_key: Optional[str] = field(default_factory=lambda: os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY"))
     api_base: Optional[str] = field(default_factory=lambda: os.getenv("LLM_API_BASE"))
     temperature: float = field(default_factory=lambda: float(os.getenv("LLM_TEMPERATURE", "0.0")))
-    max_tokens: int = field(default_factory=lambda: int(os.getenv("LLM_MAX_TOKENS", "4096")))
+    # Increased from 4096 to 8192 to handle longer documents without truncation
+    max_tokens: int = field(default_factory=lambda: int(os.getenv("LLM_MAX_TOKENS", "8192")))
 
 
 @dataclass
@@ -70,6 +71,4 @@ class StorageConfig:
     )
 
     def ensure_dirs(self) -> None:
-        """Create storage directories if they do not exist."""
-        Path(self.data_root_dir).mkdir(parents=True, exist_ok=True)
-        Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
+        """Create storage directo
